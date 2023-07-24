@@ -81,8 +81,8 @@ class Renderable:
         self._fps: float = fps
         self._num_frames: Optional[int] = num_frames
         self._query_parameters: Dict[str, str] = {}
-        # if self._session.launcher._pim_instance is not None:
-        #     self._query_parameters["instance_name"] = self._session.launcher._pim_instance.name
+        if self._session.launcher._pim_instance is not None:
+            self._query_parameters["instance_name"] = self._session.launcher._pim_instance.name
 
     def __repr__(self) -> str:
         name = self.__class__.__name__
@@ -499,7 +499,7 @@ class RenderableWebGL(Renderable):
         self._session.ensight.savegeom.save_geometric_entities(self._avz_pathname)
         # generate HTML page with file references local to the websocketserver root
         params = self._generate_request_params()
-        html = f"<script src='/ansys/nexus/viewer-loader.js{params}'></script>\n"
+        html = "<script src='/ansys/nexus/viewer-loader.js'></script>\n"
         html += f"<ansys-nexus-viewer src='/{self._avz_filename}{params}'></ansys-nexus-viewer>\n"
         # refresh the remote HTML
         self._save_remote_html_page(html)
@@ -584,10 +584,10 @@ class RenderableEVSN(Renderable):
         # Save the file
         self._session.ensight.file.save_scenario_fileslct(self._evsn_pathname)
 
-        params = self._generate_request_params()
+        # params = self._generate_request_params()
 
         # generate HTML page with file references local to the websocketserver root
-        html = f"<script src='/ansys/nexus/viewer-loader.js{params}'></script>\n"
+        html = "<script src='/ansys/nexus/viewer-loader.js'></script>\n"
         server = f"http://{self._session.hostname}:{self._session.html_port}"  # TODO
         cleanname = self._evsn_pathname.replace("\\", "/")
         attributes = f"src='{cleanname}'"
@@ -656,7 +656,7 @@ class RenderableSGEO(Renderable):  # pragma: no cover
             attributes += " aspect_ratio='proxy'"
             attributes += " renderer='sgeo'"
 
-            html = f"<script src='/ansys/nexus/viewer-loader.js{params}'></script>\n"
+            html = "<script src='/ansys/nexus/viewer-loader.js'></script>\n"
             html += f"<ansys-nexus-viewer id='{self._guid}' {attributes}></ansys-nexus-viewer>\n"
             html += self._periodic_script()
             # refresh the remote HTML
